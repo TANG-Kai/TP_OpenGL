@@ -99,7 +99,6 @@ void reshape (int w, int h) {
 }
 
 void glSphere(float x,float y, float z, float radius){
-
 	int const num_of_points = 1000;
 	double const r = radius;
 	double const delta = M_PI *1.0/ num_of_points;
@@ -107,36 +106,40 @@ void glSphere(float x,float y, float z, float radius){
 	for(double i = 0;i< M_PI;i+= delta){
 		for(double j = 0;j< M_PI;j+= delta){
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 		
 			i +=delta;
-
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 			i-= delta;
 
 			j +=delta;
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 			j-= delta;
 
 			i +=delta;
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 			i-= delta;
 
 			j +=delta;
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 			j-= delta;
 
 			j +=delta;i+=delta;
   		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+  		glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
 			j-= delta;i-=delta;
 		}
 	}
 	glEnd();
+	// set an offset
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glTranslatef(x,y,z);
+	glPopMatrix();
 }
 void display () {  
     setupCamera ();   
