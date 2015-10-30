@@ -98,24 +98,55 @@ void reshape (int w, int h) {
 	setupCamera ();
 }
 
+void glSphere(float x,float y, float z, float radius){
+
+	int const num_of_points = 1000;
+	double const r = radius;
+	double const delta = M_PI *1.0/ num_of_points;
+	glBegin(GL_TRIANGLES);
+	for(double i = 0;i< M_PI;i+= delta){
+		for(double j = 0;j< M_PI;j+= delta){
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+		
+			i +=delta;
+
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+			i-= delta;
+
+			j +=delta;
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+			j-= delta;
+
+			i +=delta;
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+			i-= delta;
+
+			j +=delta;
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+			j-= delta;
+
+			j +=delta;i+=delta;
+  		glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+  		glVertex3f(x+r*cos(i)*sin(j),y+r*cos(i)*cos(j),z+r*sin(i));
+			j-= delta;i-=delta;
+		}
+	}
+	glEnd();
+}
 void display () {  
     setupCamera ();   
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Erase the color and z buffers.
 
 	// Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
-    glBegin(GL_TRIANGLES);
-	glColor3f(1.0,0.0,0.0);
-	glVertex3f(0.0,0.0,0.0);
-	glColor3f(0.0,1.0,0.0);
-	glVertex3f(1.0,0.0,0.0);
-	glColor3f(0.0,0.0,1.0);
-	glVertex3f(1.0,1.0,0.0);
-	glEnd();
-
-    glFlush (); // Ensures any previous OpenGL call has been executed
-    glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
+	glSphere(0,0,0,1);
+  glFlush (); // Ensures any previous OpenGL call has been executed
+  glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
 }
-
 void keyboard (unsigned char keyPressed, int x, int y) {
     switch (keyPressed) {
 	case 'w':
