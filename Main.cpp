@@ -103,6 +103,14 @@ void display () {
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Erase the color and z buffers.
 
 	// Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
+    glBegin(GL_TRIANGLES);
+	glColor3f(1.0,0.0,0.0);
+	glVertex3f(0.0,0.0,0.0);
+	glColor3f(0.0,1.0,0.0);
+	glVertex3f(1.0,0.0,0.0);
+	glColor3f(0.0,0.0,1.0);
+	glVertex3f(1.0,1.0,0.0);
+	glEnd();
 
     glFlush (); // Ensures any previous OpenGL call has been executed
     glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
