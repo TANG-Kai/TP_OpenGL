@@ -71,6 +71,7 @@ void init () {
 		glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
 		glLightfv(GL_LIGHT0, GL_SPECULAR, color);
+		glEnable(GL_LIGHT0);
 		GLfloat light_position1[4] = {-10.0f, 0.0f, -1.0f, 1.0f};
 		GLfloat color1[4] = {0.0f, 0.1f, 0.3f, 1.0f};
 		glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
