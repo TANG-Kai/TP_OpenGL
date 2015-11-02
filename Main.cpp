@@ -63,7 +63,20 @@ void init () {
     glEnable (GL_DEPTH_TEST); // Enable the z-buffer in the rasterization
     glLineWidth (2.0); // Set the width of edges in GL_LINE polygon mode
     glClearColor (0.0f, 0.0f, 0.0f, 1.0f); // Background color
-
+		
+		//Ligntening initialization
+		glEnable(GL_LIGHTING);
+		GLfloat light_position[4] = {10.0f, 10.0f, 10.0f, 1.0f};
+		GLfloat color[4] = {1.0f, 0.9f, 0.8f, 1.0f};
+		glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, color);
+		glLightfv(GL_LIGHT0, GL_SPECULAR, color);
+		GLfloat light_position1[4] = {-10.0f, 0.0f, -1.0f, 1.0f};
+		GLfloat color1[4] = {0.0f, 0.1f, 0.3f, 1.0f};
+		glLightfv(GL_LIGHT1, GL_POSITION, light_position1);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, color1);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, color1);
+		glEnable(GL_LIGHT1);
     // Camera initialization
     fovAngle = 45.f;
     nearPlane = 0.01;
