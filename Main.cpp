@@ -112,54 +112,60 @@ void reshape (int w, int h) {
 }
 
 void glSphere(float x,float y, float z, float radius){
-    int const num_of_points = 1000;
+    int const num_of_points = 60;
     double const r = radius;
-    double const delta = M_PI *1.0/ num_of_points;
-    glBegin(GL_TRIANGLES);
-    for(double i = 0;i< M_PI;i+= delta){
-        for(double j = 0;j< M_PI;j+= delta){
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+    double const delta = M_PI / num_of_points;
 
-            i +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            i-= delta;
 
-            j +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;
 
-            i +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            i-= delta;
-
-            j +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;
-
-            j +=delta;i+=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;i-=delta;
-        }
-    }
-    glEnd();
     // set an offset
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glTranslatef(x,y,z);
-    glPopMatrix();
+    glBegin(GL_TRIANGLES);
+    for(double i = 0;i<2* M_PI;i+= delta){
+        for(double j = 0;j<2* M_PI;j+= delta){
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            i +=delta;
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            i-= delta;
+            j +=delta;
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            j-= delta;
+            i +=delta;
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            i-= delta;
+            j +=delta;i+=delta;
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            j-= delta;i-=delta;
+            j +=delta;
+            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
+            j-= delta;
+        }
+    }
+		glEnd();
+		glPopMatrix();
 }
 void display () {
     setupCamera ();
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Erase the color and z buffers.
 
     // Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
-    glSphere(0,0,0,1);
+		for(int i=0;i<3;i++){
+			for(int j=0;j<3;j++){
+				glSphere(i-1,j-1,0,0.5);
+			}
+		}
+		for(int i=0;i<2;i++)
+			for(int j=0;j<2;j++)
+				glSphere(i-0.5,j-0.5,1.2,0.5);
+		glSphere(0,0,1.9,0.5);
     glFlush (); // Ensures any previous OpenGL call has been executed
     glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
 }
