@@ -153,6 +153,28 @@ void glSphere(float x,float y, float z, float radius){
 		glEnd();
 		glPopMatrix();
 }
+void glSphereWithMat(float x,float y, float z, float radius,
+								float difR, float difG, float difB, float specR, float specG, float specB, float shininess){
+		// set meterial
+		GLfloat material_color[4] = {difR,difG,difB,1.0f};
+		GLfloat material_specular[4] = {specR,specG,specB,1.0};
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, material_specular);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, material_color);
+		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shininess);
+		glSphere(x,y,z,radius);
+}
+void genCheckerboard(unsigned int width, unsigned int height, unsigned char * image){//color_with_number_c__of_i_j(i,j,c)=f(c+3xj + widx3*i)
+		GLint texture;
+		glEnable(GL_TEXTURE_2D);
+		glGenTextures(1,&texture);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+		glTextParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_REPEAT);
+		glTexImage2D(GL_TEXTURE_2D,0, GL_RGB, width, height, 0 , GL_RGB, GL_UNSIGNED_BYTE, image);
+
+}
 void display () {
     setupCamera ();
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Erase the color and z buffers.
@@ -160,13 +182,13 @@ void display () {
     // Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
 		for(int i=0;i<3;i++){
 			for(int j=0;j<3;j++){
-				glSphere(i-1,j-1,0,0.5);
+				glSphereWithMat(i-1,j-1,0,0.5,0.1*i,0.1*j,0.5,0.1*i,0.1*j,0.5,0.6);
 			}
 		}
 		for(int i=0;i<2;i++)
 			for(int j=0;j<2;j++)
-				glSphere(i-0.5,j-0.5,1.2,0.5);
-		glSphere(0,0,1.9,0.5);
+				glSphereWithMat(i-0.5,j-0.5,1.2,0.5,0.1*i,0.2*j,0.5,0.2*i,0.1*j,0.5,0.7);
+		glSphereWithMat(0,0,1.9,0.5,0.1,0.2,0.5,0.2,0.1,0.3,0.5);
     glFlush (); // Ensures any previous OpenGL call has been executed
     glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
 }
