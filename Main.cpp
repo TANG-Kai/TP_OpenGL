@@ -34,10 +34,18 @@ static float camTargetX;
 static float camTargetY;
 static float camTargetZ;
 
+static int x_ancient = -1;
+static int y_ancient = -1;
+
 // Texture parameter
 static int height = 200;
 static int width = 400;
-GLuint texture;
+
+static GLuint texture;
+
+//time parameter
+static float currentTime;
+static float acceleration = 0.0;
 
 #define glAddTriV(i,j,d){\
     double theta = i/height * M_PI;\
@@ -48,8 +56,7 @@ GLuint texture;
     polar2Cartesian(phi,theta,d,x,y,z);\
     glColor3f(x,y,z);\
     glTexCoord2f(i,j);\
-    glVertex3f(x,y,z);\
-    }
+    glVertex3f(x,y,z);}
 
 void polar2Cartesian (float phi, float theta, float d, float & x, float & y, float & z) {
     x = d*sin (theta) * cos (phi);
@@ -168,33 +175,6 @@ void glSphere(float x,float y, float z, float radius){
     glPushMatrix();
     glTranslatef(x,y,z);
     glBegin(GL_TRIANGLES);
-    /*
-    for(double i = 0;i<2* M_PI;i+= delta){
-        for(double j = 0;j<2* M_PI;j+= delta){
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            i +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            i-= delta;
-            j +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;
-            i +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            i-= delta;
-            j +=delta;i+=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;i-=delta;
-            j +=delta;
-            glColor3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            glVertex3f(r*cos(i)*sin(j),r*cos(i)*cos(j),r*sin(i));
-            j-= delta;
-        }
-    }*/
     double const d = r;
     for(int i=0;i<height-1;i++)
         for(int j=0;j<width-1;j++){
@@ -223,17 +203,20 @@ void glSphereWithMat(float x,float y, float z, float radius,
 void display () {
     setupCamera ();
     glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // Erase the color and z buffers.
-
-    // Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            glSphereWithMat(i-1,j-1,0,0.5,0.1*i,0.1*j,0.5,0.1*i,0.1*j,0.5,0.6);
-        }
-    }
-    for(int i=0;i<2;i++)
-        for(int j=0;j<2;j++)
-            glSphereWithMat(i-0.5,j-0.5,1.2,0.5,0.1*i,0.2*j,0.5,0.2*i,0.1*j,0.5,0.7);
-    glSphereWithMat(0,0,1.9,0.5,0.1,0.2,0.5,0.2,0.1,0.3,0.5);
+// Put your drawing code (glBegin, glVertex, glCallList, glDrawArray, etc) here
+//    for(int i=0;i<3;i++){
+//        for(int j=0;j<3;j++){
+//            glSphereWithMat(i-1,j-1,0,0.5,0.1*i,0.1*j,0.5,0.1*i,0.1*j,0.5,0.6);
+//        }
+//    }
+//    for(int i=0;i<2;i++)
+//        for(int j=0;j<2;j++)
+//            glSphereWithMat(i-0.5,j-0.5,1.2,0.5,0.1*i,0.2*j,0.5,0.2*i,0.1*j,0.5,0.7);
+//    glSphereWithMat(0,0,1.9,0.5,0.1,0.2,0.5,0.2,0.1,0.3,0.5);
+    //a sphere that goes
+    double bouge = ((int)(currentTime*(1+acceleration))/50)%100-50;//-50~50
+    double ct =sin(bouge/50*M_PI);
+    glSphereWithMat(ct,0,0,0.5,0.1,0.2,0.5,0.2,0.1,0.3,0.5);
     glFlush (); // Ensures any previous OpenGL call has been executed
     glutSwapBuffers ();  // swap the render buffer and the displayed (screen) one
 }
@@ -243,6 +226,13 @@ void keyboard (unsigned char keyPressed, int x, int y) {
         GLint mode[2];
         glGetIntegerv (GL_POLYGON_MODE, mode);
         glPolygonMode (GL_FRONT_AND_BACK, mode[1] ==  GL_FILL ? GL_LINE : GL_FILL);
+        break;
+    case '+':
+        acceleration +=0.1;
+        break;
+    case '-':
+        acceleration -=0.1;
+        if(acceleration<-1) acceleration = -1;
         break;
     case 'q':
     case 27:
@@ -256,14 +246,36 @@ void keyboard (unsigned char keyPressed, int x, int y) {
 }
 
 void mouse (int button, int state, int x, int y) {
+    if (button == GLUT_LEFT_BUTTON) {
+            if (state == GLUT_UP) {
+                    x_ancient = -1;
+                    y_ancient = -1;
+            }
+            else  {// state = GLUT_DOWN
+                    x_ancient = x;
+                    y_ancient = y;
+            }
+    }
+
 }
 
 void motion (int x, int y) {
+
+    // left button is down
+    if (x_ancient >= 0) {
+
+            // update camera's direction
+            camPhi+=(x - x_ancient) * 0.0001f;
+            camTheta+=(y - y_ancient) * 0.0001f;
+    }
+
 }
 
 // This function is executed in an infinite loop. It updated the window title
 // (frame-per-second, model size) and ask for rendering
 void idle () {
+    currentTime = glutGet((GLenum)GLUT_ELAPSED_TIME);
+    glutPostRedisplay ();
 }
 
 int main (int argc, char ** argv) {
